@@ -15,9 +15,9 @@ class PexesoController < ApplicationController
     end
     puts session[:flipped_cards]
     if session[:flipped_cards].length >= 2
-      redirect_to pexeso_path (session[:show_flipped] = true)
+      redirect_to pexeso_index_path (session[:show_flipped] = true)
     else
-      redirect_to pexeso_path
+      redirect_to pexeso_index_path
     end
   end
 
@@ -39,7 +39,7 @@ class PexesoController < ApplicationController
     end
 
     shuffle_cards
-    redirect_to pexeso_path
+    redirect_to pexeso_index_path
   end
 
   def reset_game
@@ -47,9 +47,9 @@ class PexesoController < ApplicationController
     session[:game_iden] = nil if session[:game_iden]
     session[:flipped_cards] = []
     if where == "STAY"
-      redirect_to pexeso_path
+      redirect_to pexeso_index_path
     else
-      redirect_to home_path
+      redirect_to root_path
     end
   end
 
@@ -61,7 +61,7 @@ class PexesoController < ApplicationController
     }
     saved_game.update(game_state: game_state.to_json)
     flash[:notice] = "Game saved successfully!"
-    redirect_to pexeso_path
+    redirect_to pexeso_index_path
   end
 
   def load_game
@@ -74,7 +74,7 @@ class PexesoController < ApplicationController
       flash[:alert] = "No saved game found."
     end
 
-    redirect_to pexeso_path
+    redirect_to pexeso_index_path
   end
 
 

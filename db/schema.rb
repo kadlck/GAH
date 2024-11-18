@@ -12,7 +12,7 @@
 
 ActiveRecord::Schema[8.0].define(version: 2024_11_18_094306) do
   create_table "cards", force: :cascade do |t|
-    t.integer "game_id", null: false
+    t.integer "game_id"
     t.integer "card_id"
     t.integer "position"
     t.boolean "flip_state"

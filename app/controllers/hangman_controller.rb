@@ -9,7 +9,8 @@ class HangmanController < ApplicationController
     if session[:incorrect_guesses] >= 6
       reset_game
     end
-
+    puts session[:secret_word]
+    puts letter
     if session[:secret_word].include?(letter)
       session[:good_letters].push letter
     else
@@ -22,7 +23,7 @@ class HangmanController < ApplicationController
       flash[:notice] = "You won! Your score has been updated."
     end
 
-    redirect_to hangman_path
+    redirect_to hangman_index_path
   end
 
   def save_game
@@ -36,7 +37,7 @@ class HangmanController < ApplicationController
     }
     saved_game.update(game_state: game_state.to_json)
     flash[:notice] = "Game saved successfully!"
-    redirect_to hangman_path
+    redirect_to hangman_index_path
   end
 
   def load_game
@@ -54,7 +55,7 @@ class HangmanController < ApplicationController
       flash[:alert] = "No saved game found."
     end
 
-    redirect_to hangman_path
+    redirect_to hangman_index_path
   end
 
   def reset_game
@@ -64,9 +65,9 @@ class HangmanController < ApplicationController
     session[:incorrect_guesses] = nil
     session[:guessed_letters] = []
     if where == "STAY"
-      redirect_to hangman_path
+      redirect_to hangman_index_path
     else
-      redirect_to home_path
+      redirect_to root_path
     end
   end
 
@@ -84,6 +85,6 @@ class HangmanController < ApplicationController
     words = []
     file_of_words_path = Rails.root.join("app", "assets", "hangman", "words.txt")
     words = File.readlines(file_of_words_path).map(&:strip)
-    session[:secret_word] = words.sample.split("")
+    session[:secret_word] = words.sample.upcase.split("")
   end
 end

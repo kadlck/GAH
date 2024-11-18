@@ -32,7 +32,7 @@ class SudokuController < ApplicationController
     end
 
     cookies.delete(:hint)
-    redirect_to sudoku_path
+    redirect_to sudoku_index_path
   end
 
   def reset_game
@@ -40,9 +40,9 @@ class SudokuController < ApplicationController
     session[:game_id] = nil
     @game.destroy
     if where == "STAY"
-      redirect_to pexeso_path
+      redirect_to sudoku_index_path
     else
-      redirect_to home_path
+      redirect_to root_path
     end
   end
 
@@ -50,13 +50,13 @@ class SudokuController < ApplicationController
     initial_board = @game.initial_board
     @game.update(user_board: initial_board)
     cookies.delete(:hint)
-    redirect_to sudoku_path
+    redirect_to sudoku_index_path
   end
 
   def hint
     file_of_hints_path = Rails.root.join("app", "assets", "sudoku", "hints.txt")
     cookies[:hint] = { value: (File.readlines(file_of_hints_path).sample), expires: 1.minute.from_now }
-    redirect_to sudoku_path
+    redirect_to sudoku_index_path
   end
 
   def save_game
@@ -67,7 +67,7 @@ class SudokuController < ApplicationController
     }
     saved_game.update(game_state: game_state.to_json)
     flash[:notice] = "Game saved successfully!"
-    redirect_to sudoku_path
+    redirect_to sudoku_index_path
   end
 
   def load_game
@@ -80,7 +80,7 @@ class SudokuController < ApplicationController
       flash[:alert] = "No saved game found."
     end
 
-    redirect_to sudoku_path
+    redirect_to sudoku_index_path
   end
 
   private

@@ -21,7 +21,7 @@
               <% if is_fixed %>
                 <%= cell %>
               <% else %>
-                <%= form_with url: check_move_path, method: :post, local: true, id: "form-#{row_index}-#{col_index}", class: 'cell-form' do |form| %>
+                <%= form_with url: check_move_sudoku_index_path, method: :post, local: true, id: "form-#{row_index}-#{col_index}", class: 'cell-form' do |form| %>
                   <%= form.hidden_field :row, value: row_index %>
                   <%= form.hidden_field :col, value: col_index %>
                   <%= form.number_field :value, value: cell, class: 'cell-input' %>

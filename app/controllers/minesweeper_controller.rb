@@ -19,7 +19,7 @@ class MinesweeperController < ApplicationController
     end
 
 
-    redirect_to minesweeper_path
+    redirect_to _index
   end
 
   def reveal_cells(row, col)
@@ -45,9 +45,9 @@ class MinesweeperController < ApplicationController
     where = params["where"]
 
     if where == "STAY"
-      redirect_to minesweeper_path
+      redirect_to minesweeper_index_path
     else
-      redirect_to home_path
+      redirect_to root_path
     end
   end
 
@@ -62,7 +62,7 @@ class MinesweeperController < ApplicationController
     }
     saved_game.update(game_state: game_state.to_json)
     flash[:notice] = "Game saved successfully!"
-    redirect_to minesweeper_path
+    redirect_to _index
   end
 
   def load_game
@@ -78,7 +78,7 @@ class MinesweeperController < ApplicationController
       flash[:alert] = "No saved game found."
     end
 
-    redirect_to minesweeper_path
+    redirect_to _index
   end
 
   private
