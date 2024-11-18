@@ -1,0 +1,172 @@
+<div class="head-like">
+  <h1>Minesweeper - IT GOES BOOM</h1>
+<%= button_to 'BACK HOME', { controller: "minesweeper", action: "reset_game", where: "HOME" }, method: :post, data: { turbo: false }, class: 'btn btn-danger' %>
+<% if current_user %>
+  <div>
+    <%= button_to 'Save Game', {:controller => "minesweeper", :action => "save_game"}, method: :post, class: 'load-save' %>
+    <%= button_to 'Load Game', {:controller => "minesweeper", :action => "load_game"}, method: :post, class: 'load-save' %>
+  </div>
+<% end %>
+</div>
+
+<div id="minesweeper-board">
+  <table>
+    <% board_size = 9 %>
+    <% board_size.times do |row_index| %>
+      <tr>
+        <% board_size.times do |col_index| %>
+          <% cell_guess = session[:guesses]&.find { |guess| guess["row"] == row_index && guess["col"] == col_index } %>
+          <td class="cell">
+            <% if session[:end] %>
+              <% if session[:mines].include?([row_index, col_index]) %>
+                <div class="revealed revealed-mine">
+                  O
+                </div>
+              <% else %>
+                <% if cell_guess %>
+                  <div class="revealed revealed-<%= cell_guess["value"] %>">
+                    <%= cell_guess["value"] == 0 ? "" : cell_guess["value"] %>
+                  </div>
+                <% end %>
+              <% end %>
+            <% else %>
+              <% if cell_guess %>
+                <div class="revealed revealed-<%= cell_guess["value"] %>">
+                  <%= cell_guess["value"] == 0 ? "" : cell_guess["value"] %>
+                </div>
+              <% else %>
+                <%= button_to '?', { controller: "minesweeper", action: "round_mine", row: row_index, col: col_index }, method: :post, class: 'cell-button' %>
+              <% end %>
+            <% end %>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </table>
+</div>
+
+
+<%= button_to 'NEW GAME', { controller: "minesweeper", action: "reset_game", where: "STAY" }, method: :post, data: { turbo: false }, class: 'btn btn-danger' %>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+  const cells = document.querySelectorAll(".cell-button");
+
+  cells.forEach((cell) => {
+    cell.addEventListener("contextmenu", (event) => {
+      event.preventDefault(); // Prevent the default right-click menu
+      const row = event.target.dataset.row;
+      const col = event.target.dataset.col;
+
+      // Send a POST request to mark the cell with an "M"
+      fetch(`/minesweeper/mark_mine`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content,
+        },
+        body: JSON.stringify({ row: row, col: col }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === "marked") {
+            event.target.textContent = "M";
+            event.target.disabled = true; // Optionally disable the button
+          }
+        });
+    });
+  });
+});
+
+
+</script>
+
+<style>
+
+.load-save{
+  background-color: transparent;
+  border: none;
+  color: whitesmoke;
+}
+
+#minesweeper-board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+#minesweeper-board table {
+  border-collapse: collapse;
+  background-color: #e0e0e0;
+}
+
+.cell {
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  border: 2px solid #bbb;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+form {
+  width: 100%;
+  height: 100%;
+}
+
+.cell-button {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background-color: #cccccc;
+  cursor: pointer;
+}
+
+.cell-button:hover {
+  background-color: #b0b0b0;
+}
+
+.revealed {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  line-height: 40px;
+  font-weight: bold;
+  color: #444;
+  background-color: #ffffff;
+}
+
+.revealed-mine {
+  background-color: #ffcccc;
+  color: #ff0000;
+  font-weight: bold;
+  text-align: center;
+  line-height: 40px;
+  border: 1px solid #d32f2f;
+}
+
+.revealed {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+  font-weight: bold;
+  border: none;
+}
+
+.revealed-0 { color: transparent; } /* Hide '0' values */
+.revealed-1 { color: #0000ff; } /* Blue */
+.revealed-2 { color: #008000; } /* Green */
+.revealed-3 { color: #ff0000; } /* Red */
+.revealed-4 { color: #800080; } /* Purple */
+.revealed-5 { color: #800000; } /* Maroon */
+.revealed-6 { color: #40e0d0; } /* Turquoise */
+.revealed-7 { color: #000000; } /* Black */
+.revealed-8 { color: #808080; } /* Gray */
+
+</style>

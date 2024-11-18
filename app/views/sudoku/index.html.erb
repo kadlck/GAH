@@ -1,0 +1,223 @@
+
+<div class="head-like">
+<h1>Sudoku - Impossible Puzzle</h1>
+<%= button_to 'BACK HOME', {:controller => "sudoku", :action => "reset_game", :where => "HOME"} , :method=>:post, data: { turbo: false }, class: 'home-button'  %>
+<% if current_user %>
+  <div>
+    <%= button_to 'Save Game', {:controller => "sudoku", :action => "save_game"}, :method=> :post, class: 'load-save' %>
+    <%= button_to 'Load Game', {:controller => "sudoku", :action => "load_game"}, :method => :post, class: 'load-save' %>
+  </div>
+<% end %>
+</div>
+
+<div id="game-container">
+  <div id="sudoku-board">
+    <table>
+      <% @game[:user_board].each_with_index do |row, row_index| %>
+        <tr>
+          <% row.each_with_index do |cell, col_index| %>
+            <% is_fixed = @game[:initial_board][row_index][col_index] != nil %>
+            <td class="<%= 'fixed' if is_fixed %>" id="cell-<%= row_index %>-<%= col_index %>">
+              <% if is_fixed %>
+                <%= cell %>
+              <% else %>
+                <%= form_with url: check_move_path, method: :post, local: true, id: "form-#{row_index}-#{col_index}", class: 'cell-form' do |form| %>
+                  <%= form.hidden_field :row, value: row_index %>
+                  <%= form.hidden_field :col, value: col_index %>
+                  <%= form.number_field :value, value: cell, class: 'cell-input' %>
+                  <%= form.submit 'Submit', class: 'submit-button' %>
+                <% end %>
+              <% end %>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+
+
+  <div id="numeric-keyboard">
+    <div class="keyboard-row">
+      <% (1..3).each do |num| %>
+        <button class="keyboard-button" data-value="<%= num %>"><%= num %></button>
+      <% end %>
+    </div>
+    <div class="keyboard-row">
+      <% (4..6).each do |num| %>
+        <button class="keyboard-button" data-value="<%= num %>"><%= num %></button>
+      <% end %>
+    </div>
+    <div class="keyboard-row">
+      <% (7..9).each do |num| %>
+        <button class="keyboard-button" data-value="<%= num %>"><%= num %></button>
+      <% end %>
+    </div>
+  </div>
+</div>
+<%= cookies[:hint] %>
+
+<div class="buttons">
+<%= button_to 'Restart Game', {:controller => "sudoku", :action => "reset_game", :where => "STAY"} , :method=>:post, data: { turbo: false }, class: 'btn btn-danger'  %>
+<%= button_to 'Clear guesses', {:controller => "sudoku", :action => "clear_user_guess"} , :method=>:post, data: { turbo: false }, class: 'btn btn-danger'  %>
+<%= button_to 'Hint', {:controller => "sudoku", :action => "hint"} , :method=>:get, data: { turbo: false }, class: 'btn btn-danger'  %>
+</div>
+
+<style>
+.load-save{
+  background-color: transparent;
+  border: none;
+  color: whitesmoke;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+
+
+  #game-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  #sudoku-board {
+    text-align: center;
+    margin: 20px;
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  td {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    border: 1px solid #ccc;
+    font-size: 20px;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .fixed {
+    background-color: #f0f0f0;
+  }
+
+  .cell-input {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    text-align: center;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    border: 0;
+    background-color: transparent;
+    padding: 0;
+
+  }
+
+.cell-input::-webkit-inner-spin-button, 
+.cell-input::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0;
+}
+
+.cell-input {
+  -moz-appearance: textfield;
+  }
+
+  .submit-button {
+    padding: 5px;
+    margin-top: 5px;
+    display: none;
+  }
+  
+  .click-to-edit {
+    color: #888;
+    font-size: 14px;
+  }
+
+  #numeric-keyboard {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .keyboard-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .keyboard-button {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    cursor: pointer;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .keyboard-button:hover {
+    background-color: #ddd;
+  }
+
+  .selected-cell {
+    border: 3px solid #007bff;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", (event) => {
+  console.log("DOM fully loaded and parsed");
+  });
+  let selectedCell = null;
+
+  const cells = document.querySelectorAll('td');
+  
+  cells.forEach(cell => {
+    cell.addEventListener('click', function() {
+      if (selectedCell) {
+        selectedCell.classList.remove('selected-cell');
+      }
+
+      selectedCell = cell;
+      selectedCell.classList.add('selected-cell');
+
+      document.querySelectorAll('.keyboard-button').forEach(button => {
+        button.disabled = false;
+      });
+    });
+  });
+
+
+  const numberButtons = document.querySelectorAll('.keyboard-button');
+  numberButtons.forEach(button => {
+  button.addEventListener('click', function() {
+  if (selectedCell) {
+      const rowIndex = selectedCell.id.split('-')[1];
+      const colIndex = selectedCell.id.split('-')[2];
+      const number = button.getAttribute('data-value');
+
+      id = "form-"+rowIndex+"-"+colIndex
+      const form = document.getElementById(id);
+      if (form) {
+        console.log(form);
+        const input = form.querySelector('input[name="value"]');
+        input.value = number;
+        console.log(form);
+        form.submit();
+        }
+      document.querySelectorAll('.keyboard-button').forEach(button => {button.disabled = true});
+          }
+      });
+    });
+</script>
+
+

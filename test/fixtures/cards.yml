@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  game: one
+  card_id: 1
+  position: 1
+  flip_state: false
+  found: false
+
+two:
+  game: two
+  card_id: 1
+  position: 1
+  flip_state: false
+  found: false

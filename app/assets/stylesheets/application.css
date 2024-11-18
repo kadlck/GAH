@@ -1,0 +1,142 @@
+body {
+  background-color: whitesmoke;
+  color: rgb(0, 0, 0);
+  font-family: 'Arial', sans-serif;
+  text-align: center;
+  height: 100vh;
+  display: flex;
+  margin: 0;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+header {
+  min-height: 20vh;
+  padding: 20px;
+  background-color: rgb(53, 53, 53);
+  color: whitesmoke;
+  display: flex;
+  flex-direction: column;
+  justify-content:space-between; 
+  align-items: center;
+  overflow: hidden;
+}
+
+header h1 {
+  font-size: 45px;
+  padding-bottom: 10px;
+  margin: 0;
+}
+
+header .nav {
+  font-size: 20px;
+}
+
+.btn {
+  padding: 20px;
+}
+
+.testimonials {
+  background-color: rgb(151, 151, 151) ;
+  font-size: 20px;
+  font-style: italic;
+  margin: 20px;
+}
+
+.testimonials .flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+  padding: 20px;
+}
+
+.testimonial p {
+  font-size: 20px;
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.testimonial cite {
+  font-size: 15px;
+  text-align: left;
+}
+
+.nav a {
+  color: whitesmoke;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.nav a:hover {
+  color: #ccc;
+}
+
+.nav a:active,
+.nav a:focus {
+  color: whitesmoke;
+  outline: none;
+}
+
+.nav a:focus {
+  outline: 2px solid #fff;
+}
+
+footer {
+  background-color: rgb(53, 53, 53);
+  color: whitesmoke;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+.about {
+  color:  rgb(53, 53, 53);
+  font-size: 20px;
+}
+
+
+.head-like {
+  padding: 20px;
+  background-color: rgb(53, 53, 53);
+  color: whitesmoke;
+  font-size: 20px;
+  margin: 0;
+  font-style: italic;
+}
+
+.home-button {
+  border: none;
+  background-color: transparent;
+  color: whitesmoke;
+  font-size: 20px;
+}
+
+.log-out {
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  font-family: inherit;
+  font-size: 20px;
+  padding: 10px;
+  font-style: italic;
+  background-color: whitesmoke;
+  color:  rgb(53, 53, 53);
+}
+
+.form_login {
+  font-family: inherit;
+  font-size: 20px;
+}
+
+.form_login input[type="email"], .form_login input[type="password"] {
+  font-size: 20px;
+  font-family: inherit;  
+}
+
+.actions input{
+  font-size: 20px;
+  font-family: inherit;
+}

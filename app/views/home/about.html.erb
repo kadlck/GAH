@@ -1,0 +1,42 @@
+<header>
+
+    <% if current_user %>
+    <%= button_to 'Sign Out', destroy_user_session_path, method: :delete, class: 'log-out' %>
+    <% end %>
+    
+    <h1>Welcome to Games Against Humanity</h1>
+
+    <div class="nav">
+        <% if current_user.nil?%>
+        <%= link_to 'Get Started', new_user_registration_path, class: 'btn btn-info'%>
+        <%= link_to 'Log In', new_user_session_path, class: 'btn btn-info'%>
+        <% end%>
+        <% if current_user %>
+        <%= link_to 'Sign Out', destroy_user_session_path, method: :delete, data: { turbo: false }, class: 'btn btn-info' %>
+        <% end %>
+        <%= link_to 'Back to Home', root_path, class: 'btn btn-primary' %>
+        <%= link_to 'Pexeso', pexeso_path, class: 'btn btn-info' %>
+        <%= link_to 'Hangman', hangman_path, class: 'btn btn-info' %>
+        <%= link_to 'Sudoku', sudoku_path, class: 'btn btn-info' %>
+        <%= link_to 'Minesweeper', minesweeper_path, class: 'btn btn-info' %>
+    </div>
+</header>
+
+<div class="intro">
+    <h2>Explore the Impossible</h2>
+    <p>Choose from a collection of bizarre games that test your limits of patience and sanity.</p>
+</div>
+
+<div class="about">
+    <p>Welcome to Games Against Humanity, where we challenge your ability to thrive in the most impossible, frustrating,
+       and downright absurd game scenarios. Our collection of games is designed not to entertain you easily, but to test your 
+       limits, patience, and wit.
+    </p>
+    <p>We have designed these games to push the boundaries of what you expect from a simple game. If you're up for the challenge,
+       join us and see if you have what it takes to survive the impossible.
+    </p>
+</div>
+
+<footer class="footer">
+  <p>&copy; <%= Time.now.year %> Games Against Humanity by C&C Production | All Rights Reserved</p>
+</footer>
